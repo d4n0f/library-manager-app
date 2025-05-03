@@ -10,15 +10,15 @@ namespace LibraryManager.API.Models
         public int InventoryNumber { get; set; }
 
         [Required]
-        [RegularExpression(@"^(?!\s*$)")]
+        [RegularExpression(@"^(?!\s*$).+")]
         public string Title { get; set; }
 
         [Required]
-        [RegularExpression(@"^(?!\s*$)")]
+        [RegularExpression(@"^(?!\s*$).+")]
         public string Author { get; set; }
 
         [Required]
-        [RegularExpression(@"^(?!\s*$)")]
+        [RegularExpression(@"^(?!\s*$).+")]
         public string Publisher { get; set; }
 
         [Required]
