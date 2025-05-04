@@ -12,11 +12,11 @@ namespace LibraryManager.API.Models
         public int InventoryNumber { get; set; }
 
         [Required]
-        //[NotOlderThanTodaysDate]
+        [NotOlderThanTodaysDate]
         public DateOnly RentalDate { get; set; }
 
         [Required]
-        //[DueDateIsLaterThanRentalDate]
+        [DueDateIsLaterThanRentalDate]
         public DateOnly DueDate { get; set; }
     }
 }
