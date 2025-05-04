@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<DemoDataContext>(
+builder.Services.AddDbContext<LibraryDataContext>(
     options =>
     {
         options.UseSqlite(builder.Configuration.GetConnectionString("SQLite"));
@@ -20,6 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IBookService, BookService>();
+builder.Services.AddSingleton<IReaderService, ReaderService>();
 
 var app = builder.Build();
 
