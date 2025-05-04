@@ -8,9 +8,9 @@ namespace LibraryManager.API.Controllers
     [Route("books")]
     public class BookController : ControllerBase
     {
-        private readonly DemoDataContext _demoDataContext;
+        private readonly LibraryDataContext _demoDataContext;
 
-        public BookController(DemoDataContext demoDataContext)
+        public BookController(LibraryDataContext demoDataContext)
         {
             _demoDataContext = demoDataContext;
         }

@@ -3,13 +3,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManager.API
 {
-    public class DemoDataContext : DbContext
+    public class LibraryDataContext : DbContext
     {
-        public DemoDataContext(DbContextOptions options)
+        public LibraryDataContext(DbContextOptions options)
         : base(options)
         {
         }
 
         public virtual DbSet<Book> Books { get; set; }
+        public virtual DbSet<Reader> Readers { get; set; }
     }
 }
