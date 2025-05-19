@@ -1,4 +1,4 @@
-﻿using LibraryManager.API.Models;
+﻿using LibraryManager.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

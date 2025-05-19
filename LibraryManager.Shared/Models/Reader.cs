@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LibraryManager.API.Models
+namespace LibraryManager.Shared.Models
 {
     public class Reader
     {

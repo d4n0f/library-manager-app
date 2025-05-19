@@ -1,7 +1,7 @@
-﻿using LibraryManager.API.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using LibraryManager.Shared.Models;
 
-namespace LibraryManager.API.Validations
+namespace LibraryManager.Models.Validations
 {
     public class DueDateIsLaterThanRentalDateAttribute : ValidationAttribute
     {

@@ -12,9 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
     <Folder Include="Components\" />
     <Folder Include="Pages\" />
   </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\LibraryManager.Shared\LibraryManager.Shared.csproj" />
+	</ItemGroup>
 
 </Project>

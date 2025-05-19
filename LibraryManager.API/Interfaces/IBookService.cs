@@ -1,5 +1,4 @@
-﻿using LibraryManager.API.Models;
-using System;
+﻿using LibraryManager.Shared.Models;
 
 namespace LibraryManager.API.Interfaces
 {

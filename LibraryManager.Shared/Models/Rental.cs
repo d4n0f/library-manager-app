@@ -1,7 +1,7 @@
-﻿using LibraryManager.API.Validations;
+﻿using LibraryManager.Models.Validations;
 using System.ComponentModel.DataAnnotations;
 
-namespace LibraryManager.API.Models
+namespace LibraryManager.Shared.Models
 {
     public class Rental
     {

@@ -1,4 +1,4 @@
-﻿using LibraryManager.API.Models;
+﻿using LibraryManager.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManager.API

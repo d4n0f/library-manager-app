@@ -1,5 +1,5 @@
 ﻿using LibraryManager.API.Interfaces;
-using LibraryManager.API.Models;
+using LibraryManager.Shared.Models;
 
 namespace LibraryManager.API.Services
 {

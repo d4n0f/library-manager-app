@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LibraryManager.API.Validations
+namespace LibraryManager.Models.Validations
 {
     public class NotOlderThanTodaysDateAttribute : ValidationAttribute
     {
