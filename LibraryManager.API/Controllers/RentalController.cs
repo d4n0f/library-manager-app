@@ -8,25 +8,25 @@ namespace LibraryManager.API.Controllers
     [Route("rentals")]
     public class RentalController : ControllerBase
     {
-        private readonly LibraryDataContext _readersDataContext;
+        private readonly LibraryDataContext _rentalsDataContext;
 
-        public RentalController(LibraryDataContext readersDataContext)
+        public RentalController(LibraryDataContext rentalsDataContext)
         {
-            _readersDataContext = readersDataContext;
+            _rentalsDataContext = rentalsDataContext;
         }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] Rental rental)
         {
-            var existingReader = await _readersDataContext.Readers.FindAsync(rental.ReaderNumber);
+            var existingReader = await _rentalsDataContext.Readers.FindAsync(rental.ReaderNumber);
 
             if (existingReader is not null)
             {
                 return Conflict();
             }
 
-            _readersDataContext.Rentals.Add(rental);
-            await _readersDataContext.SaveChangesAsync();
+            _rentalsDataContext.Rentals.Add(rental);
+            await _rentalsDataContext.SaveChangesAsync();
 
             return Ok();
         }
@@ -34,15 +34,15 @@ namespace LibraryManager.API.Controllers
         [HttpDelete("{rentalId}")]
         public async Task<IActionResult> Delete(int rentalId)
         {
-            var existingRental = await _readersDataContext.Rentals.FindAsync(rentalId);
+            var existingRental = await _rentalsDataContext.Rentals.FindAsync(rentalId);
 
             if (existingRental is null)
             {
                 return NotFound();
             }
 
-            _readersDataContext.Rentals.Remove(existingRental);
-            await _readersDataContext.SaveChangesAsync();
+            _rentalsDataContext.Rentals.Remove(existingRental);
+            await _rentalsDataContext.SaveChangesAsync();
 
             return Ok();
         }
@@ -50,14 +50,14 @@ namespace LibraryManager.API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Rental>>> GetAll()
         {
-            var rentals = await _readersDataContext.Rentals.ToListAsync();
+            var rentals = await _rentalsDataContext.Rentals.ToListAsync();
             return Ok(rentals);
         }
             
         [HttpGet("{rentalId}")]
         public async Task<ActionResult<Rental>> Get(int rentalId)
         {
-            var rental = await _readersDataContext.Rentals.FindAsync(rentalId);
+            var rental = await _rentalsDataContext.Rentals.FindAsync(rentalId);
 
             if (rental is null)
             {
@@ -75,7 +75,7 @@ namespace LibraryManager.API.Controllers
                 return BadRequest();
             }
 
-            var oldRental = await _readersDataContext.Rentals.FindAsync(rentalId);
+            var oldRental = await _rentalsDataContext.Rentals.FindAsync(rentalId);
 
             if (oldRental is null)
             {
@@ -88,8 +88,8 @@ namespace LibraryManager.API.Controllers
             oldRental.RentalDate = rental.RentalDate;
             oldRental.DueDate = rental.DueDate;
 
-            _readersDataContext.Rentals.Update(oldRental);
-            await _readersDataContext.SaveChangesAsync();
+            _rentalsDataContext.Rentals.Update(oldRental);
+            await _rentalsDataContext.SaveChangesAsync();
 
             return Ok();
         }

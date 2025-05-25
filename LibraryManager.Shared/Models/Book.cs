@@ -9,20 +9,20 @@ namespace LibraryManager.Shared.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int InventoryNumber { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Cím megadása kötelező!")]
         [RegularExpression(@"^(?!\s*$).+")]
         public string Title { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Szerző megadása kötelező!")]
         [RegularExpression(@"^(?!\s*$).+")]
         public string Author { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Kiadó megadása kötelező!")]
         [RegularExpression(@"^(?!\s*$).+")]
         public string Publisher { get; set; }
 
-        [Required]
-        [Range(1, int.MaxValue)]
+        [Required(ErrorMessage = "Kiadás évének megadása kötelező!")]
+        [Range(1, 2025, ErrorMessage = "A kiadás éve nem lehet negatív, illetve nem lehet jövőbeli!")]
         public int PublicationYear { get; set; }
     }
 }

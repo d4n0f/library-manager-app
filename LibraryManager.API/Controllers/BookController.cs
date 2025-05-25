@@ -8,41 +8,34 @@ namespace LibraryManager.API.Controllers
     [Route("books")]
     public class BookController : ControllerBase
     {
-        private readonly LibraryDataContext _demoDataContext;
+        private readonly LibraryDataContext _booksDataContext;
 
-        public BookController(LibraryDataContext demoDataContext)
+        public BookController(LibraryDataContext booksDataContext)
         {
-            _demoDataContext = demoDataContext;
+            _booksDataContext = booksDataContext;
         }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] Book book)
         {
-            var existingBook = await _demoDataContext.Books.FindAsync(book.InventoryNumber);
+            _booksDataContext.Books.Add(book);
+            await _booksDataContext.SaveChangesAsync();
 
-            if (existingBook is not null)
-            {
-                return Conflict();
-            }
-
-            _demoDataContext.Books.Add(book);
-            await _demoDataContext.SaveChangesAsync();
-
-            return Ok();
+            return Ok(book);
         }
 
         [HttpDelete("{inventoryNumber}")]
         public async Task<IActionResult> Delete(int inventoryNumber)
         {
-            var existingBook = await _demoDataContext.Books.FindAsync(inventoryNumber);
+            var existingBook = await _booksDataContext.Books.FindAsync(inventoryNumber);
 
             if (existingBook is null)
             {
                 return NotFound();
             }
 
-            _demoDataContext.Books.Remove(existingBook);
-            await _demoDataContext.SaveChangesAsync();
+            _booksDataContext.Books.Remove(existingBook);
+            await _booksDataContext.SaveChangesAsync();
 
             return Ok();
         }
@@ -50,14 +43,14 @@ namespace LibraryManager.API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Book>>> GetAll()
         {
-            var books = await _demoDataContext.Books.ToListAsync();
+            var books = await _booksDataContext.Books.ToListAsync();
             return Ok(books);
         }
 
         [HttpGet("{inventoryNumber}")]
         public async Task<ActionResult<Book>> Get(int inventoryNumber)
         {
-            var book = await _demoDataContext.Books.FindAsync(inventoryNumber);
+            var book = await _booksDataContext.Books.FindAsync(inventoryNumber);
 
             if (book is null)
             {
@@ -75,7 +68,7 @@ namespace LibraryManager.API.Controllers
                 return BadRequest();
             }
 
-            var oldBook = await _demoDataContext.Books.FindAsync(inventoryNumber);
+            var oldBook = await _booksDataContext.Books.FindAsync(inventoryNumber);
 
             if (oldBook is null)
             {
@@ -87,8 +80,8 @@ namespace LibraryManager.API.Controllers
             oldBook.Publisher = book.Publisher;
             oldBook.PublicationYear = book.PublicationYear;
 
-            _demoDataContext.Books.Update(oldBook);
-            await _demoDataContext.SaveChangesAsync();
+            _booksDataContext.Books.Update(oldBook);
+            await _booksDataContext.SaveChangesAsync();
 
             return Ok();
         }
