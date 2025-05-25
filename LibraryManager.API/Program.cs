@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
+
 builder.Services.AddDbContext<LibraryDataContext>(
     options =>
     {
@@ -12,15 +14,13 @@ builder.Services.AddDbContext<LibraryDataContext>(
         options.UseLazyLoadingProxies();
     });
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IBookService, BookService>();
 builder.Services.AddSingleton<IReaderService, ReaderService>();
+builder.Services.AddSingleton<IRentalService, RentalService>();
+
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -31,10 +31,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
+app.UseRouting();
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.UseAuthorization();
-
 app.MapControllers();
+
+app.UseHttpsRedirection();
 
 app.Run();
