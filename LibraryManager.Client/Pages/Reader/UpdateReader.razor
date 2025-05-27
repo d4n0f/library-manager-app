@@ -1,0 +1,41 @@
+﻿@page "/readers/update/{readerNumber:int}"
+@using LibraryManager.Shared.Models
+@using LibraryManager.Client.Interfaces
+@inject IReaderService ReaderService
+@inject NavigationManager NavigationManager
+
+<h3>Olvasó frissítése</h3>
+
+@if (_reader == null)
+{
+    <p>Betöltés...</p>
+}
+else
+{
+    <ReaderForm Reader="_reader" OnValidSubmit="UpdateBookAsync" ButtonText="Mentés" />
+}
+
+
+<div class="mb-3" style="margin-top: 1em">
+    <a href="/readers" class="btn btn-primary">Mégse</a>
+</div>
+
+@code {
+
+    [Parameter]
+    public int readerNumber { get; set; }
+
+    private Reader _reader;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _reader = await ReaderService.GetReaderAsync(readerNumber);
+    }
+
+    private async Task UpdateBookAsync()
+    {
+        await ReaderService.UpdateReaderAsync(readerNumber, _reader);
+        NavigationManager.NavigateTo("/readers");
+    }
+}
+

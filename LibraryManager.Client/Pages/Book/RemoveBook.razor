@@ -1,0 +1,25 @@
+﻿@page "/books/remove/{inventoryNumber:int}"
+@using LibraryManager.Shared.Models
+@using LibraryManager.Client.Interfaces
+@inject IBookService BookService
+@inject NavigationManager NavigationManager
+
+<h3>Könyv hozzáadása</h3>
+
+<button class="btn btn-danger" @onclick="DeleteBookAsync">Törlés</button>
+
+<div class="mb-3" style="margin-top: 1em">
+    <a href="/books" class="btn btn-primary">Mégse</a>
+</div>
+
+@code {
+    [Parameter]
+    public int inventoryNumber { get; set; }
+
+    private async Task DeleteBookAsync()
+    {
+        await BookService.DeleteBookAsync(inventoryNumber);
+        NavigationManager.NavigateTo("/books");
+    }
+}
+
