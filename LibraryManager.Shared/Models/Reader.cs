@@ -18,7 +18,7 @@ namespace LibraryManager.Shared.Models
         public string Address { get; set; }
 
         [Required(ErrorMessage = "A mező nem lehet üres!")]
-        [Range(typeof(DateOnly), "01/01/1900", "12/31/2025", ErrorMessage = "A mező nem tartalmazhat csak whitespace karaktereket!")]
+        [Range(typeof(DateOnly), "01/01/1900", "12/31/9999", ErrorMessage = "Nem lehet 1900-nál kisebb évet megadni!")]
         public DateOnly BirthDate { get; set; }
     }
 }
