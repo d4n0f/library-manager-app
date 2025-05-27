@@ -44,5 +44,15 @@ namespace LibraryManager.API.Services
             _rentals.Remove(rental);
             return true;
         }
+
+        public void UpdateRental(Rental rental)
+        {
+            var oldRental = GetRental(rental.ReaderNumber, rental.InventoryNumber);
+
+            oldRental.ReaderNumber = rental.ReaderNumber;
+            oldRental.InventoryNumber = rental.InventoryNumber;
+            oldRental.RentalDate = rental.RentalDate;
+            oldRental.DueDate = rental.DueDate;
+        }
     }
 }

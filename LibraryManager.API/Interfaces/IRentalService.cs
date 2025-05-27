@@ -11,5 +11,7 @@ namespace LibraryManager.API.Interfaces
         bool RentBook(Rental rental);
 
         bool ReturnBook(int readerNumber, int inventoryNumber);
+
+        void UpdateRental(Rental rental);
     }
 }
