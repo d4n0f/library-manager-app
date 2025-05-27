@@ -1,0 +1,55 @@
+﻿@page "/readers/{readerNumber:int}"
+@using LibraryManager.Shared.Models
+@using LibraryManager.Client.Interfaces
+@inject IRentalService RentalService
+@inject NavigationManager NavigationManager
+
+<h3>Olvasói kölcsönzések</h3>
+
+<div class="mb-3" style="margin-top: 1em">
+    <a href="/readers" class="btn btn-primary">Vissza</a>
+</div>
+
+@if (_rentals is not null)
+{
+    <table class="table table-hover border">
+        <thead>
+            <tr>
+                <th>Kölcsönző id</th>
+                <th>Olvasó szám</th>
+                <th>Leltári szám</th>
+                <th>Kölcsönzés dátuma</th>
+                <th>Visszahozás dátuma</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var rental in _rentals)
+            {
+                <tr>
+                    <td>@rental.RentalID</td>
+                    <td>@rental.ReaderNumber</td>
+                    <td>@rental.InventoryNumber</td>
+                    <td>@rental.RentalDate</td>
+                    <td>@rental.DueDate</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Betöltés...</p>
+}
+
+@code {
+    [Parameter]
+    public int ReaderNumber { get; set; }
+
+    private List<Rental> _rentals;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _rentals = await RentalService.GetRentedBooksByPersonAsync(ReaderNumber);
+    }
+}

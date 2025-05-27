@@ -1,0 +1,23 @@
+﻿@page "/rentals/rent"
+@using LibraryManager.Shared.Models
+@using LibraryManager.Client.Interfaces
+@inject IRentalService RentalService
+@inject NavigationManager NavigationManager
+
+<h3>Könyv kikölcsönzése</h3>
+
+<RentBookForm Rental="_rental" OnValidSubmit="RentBookAsync" ButtonText="Kikölcsönzés" />
+
+<div class="mb-3" style="margin-top: 1em">
+    <a href="/rentals" class="btn btn-primary">Mégse</a>
+</div>
+
+@code {
+    private Rental _rental = new();
+
+    private async Task RentBookAsync()
+    {
+        await RentalService.RentBookAsync(_rental);
+        NavigationManager.NavigateTo("/rentals");
+    }
+}

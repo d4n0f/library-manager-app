@@ -1,0 +1,24 @@
+﻿@page "/readers/add"
+@using LibraryManager.Shared.Models
+@using LibraryManager.Client.Interfaces
+@inject IReaderService ReaderService
+@inject NavigationManager NavigationManager
+
+<h3>Könyv hozzáadása</h3>
+
+<ReaderForm Reader="_reader" OnValidSubmit="AddReaderAsync" ButtonText="Hozzáad" />
+
+<div class="mb-3" style="margin-top: 1em">
+    <a href="/readers" class="btn btn-primary">Mégse</a>
+</div>
+
+@code {
+    private Reader _reader = new();
+
+    private async Task AddReaderAsync()
+    {
+        await ReaderService.AddReaderAsync(_reader);
+        NavigationManager.NavigateTo("/readers");
+    }
+}
+

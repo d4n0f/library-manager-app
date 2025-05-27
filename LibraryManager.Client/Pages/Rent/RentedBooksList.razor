@@ -1,0 +1,62 @@
+﻿@page "/rentals"
+@using LibraryManager.Shared.Models
+@using LibraryManager.Client.Interfaces
+@inject IRentalService RentalService
+
+<h3>Kölcsönzések</h3>
+
+<div class="mb-3">
+    <a href="/rentals/rent" class="btn btn-primary">Könyv kikölcsönzése</a>
+</div>
+
+@if (_rentals is not null)
+{
+        <table class="table table-hover border">
+            <thead>
+                <tr>
+                    <th>Kölcsönző id</th>
+                    <th>Olvasó szám</th>
+                    <th>Leltári szám</th>
+                    <th>Kölcsönzés dátuma</th>
+                    <th>Visszahozás dátuma</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var rental in _rentals)
+            {
+                <tr>
+                    <td>@rental.RentalID</td>
+                    <td>@rental.ReaderNumber</td>
+                    <td>@rental.InventoryNumber</td>
+                    <td>@rental.RentalDate</td>
+                    <td>@rental.DueDate</td>
+                    <td>
+                        <a href="/rentals/update/@rental.ReaderNumber/@rental.InventoryNumber">
+                            Frissítés
+                        </a>
+                    </td>
+                    <td>
+                        <a href="/rentals/return/@rental.ReaderNumber/@rental.InventoryNumber">
+                            Visszahozás
+                        </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+}
+else
+{
+    <p>Betöltés...</p>
+}
+
+@code {
+    private List<Rental> _rentals;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _rentals = await RentalService.GetAllRentedBooksAsync();
+    }
+}

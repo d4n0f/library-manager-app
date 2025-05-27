@@ -1,0 +1,25 @@
+﻿@page "/readers/remove/{readerNumber:int}"
+@using LibraryManager.Shared.Models
+@using LibraryManager.Client.Interfaces
+@inject IReaderService ReaderService
+@inject NavigationManager NavigationManager
+
+<h3>Könyv hozzáadása</h3>
+
+<button class="btn btn-danger" @onclick="RemoveReaderAsync">Törlés</button>
+
+<div class="mb-3" style="margin-top: 1em">
+    <a href="/readers" class="btn btn-primary">Mégse</a>
+</div>
+
+@code {
+    [Parameter]
+    public int readerNumber { get; set; }
+
+    private async Task RemoveReaderAsync()
+    {
+        await ReaderService.RemoveReaderAsync(readerNumber);
+        NavigationManager.NavigateTo("/readers");
+    }
+}
+

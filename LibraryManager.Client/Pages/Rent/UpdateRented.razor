@@ -1,0 +1,44 @@
+﻿@page "/rentals/update/{readerNumber:int}/{inventoryNumber:int}"
+@using LibraryManager.Shared.Models
+@using LibraryManager.Client.Interfaces
+@inject IRentalService RentalService
+@inject NavigationManager NavigationManager
+
+<h3>Kölcsönzés frissítése</h3>
+
+@if (_rental == null)
+{
+    <p>Betöltés...</p>
+}
+else
+{
+    <RentBookForm Rental="_rental" OnValidSubmit="UpdateRentedAsync" ButtonText="Mentés" />
+}
+
+
+<div class="mb-3" style="margin-top: 1em">
+    <a href="/rentals" class="btn btn-primary">Mégse</a>
+</div>
+
+@code {
+
+    [Parameter]
+    public int ReaderNumber { get; set; }
+
+    [Parameter]
+    public int InventoryNumber { get; set; }
+
+    private Rental _rental;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _rental = await RentalService.GetRentedBookByPersonAsync(ReaderNumber, InventoryNumber);
+    }
+
+    private async Task UpdateRentedAsync()
+    {
+        await RentalService.UpdateRentedAsync(_rental.RentalID, _rental);
+        NavigationManager.NavigateTo("/rentals");
+    }
+}
+

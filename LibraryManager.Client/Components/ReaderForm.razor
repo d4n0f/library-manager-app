@@ -1,0 +1,43 @@
+﻿@using LibraryManager.Shared.Models
+
+<EditForm Model="Reader" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Név</label>
+        <InputText @bind-Value="Reader.Name" class="form-control" placeholder="Olvasó neve" />
+        <ValidationMessage For="() => Reader.Name" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Lakcím</label>
+        <InputText @bind-Value="Reader.Address" class="form-control" placeholder="Olvasó lakcíme" />
+        <ValidationMessage For="() => Reader.Address" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Születési dátum</label>
+        <InputDate @bind-Value="Reader.BirthDate" class="form-control" placeholder="Olvasó születési dátuma" />
+        <ValidationMessage For="() => Reader.BirthDate" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">@ButtonText</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public Reader Reader { get; set; } = new();
+
+    [Parameter]
+    public Func<Task> OnValidSubmit { get; set; }
+
+    [Parameter]
+    public string ButtonText { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (Reader.BirthDate == default)
+        {
+            Reader.BirthDate = new DateOnly(1900, 1, 1);
+        }
+    }
+}

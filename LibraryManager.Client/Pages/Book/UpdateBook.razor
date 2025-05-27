@@ -1,0 +1,41 @@
+﻿@page "/books/update/{inventoryNumber:int}"
+@using LibraryManager.Shared.Models
+@using LibraryManager.Client.Interfaces
+@inject IBookService BookService
+@inject NavigationManager NavigationManager
+
+<h3>Könyv frissítése</h3>
+
+@if (_book == null)
+{
+    <p>Betöltés...</p>
+}
+else
+{
+    <BookForm Book="_book" OnValidSubmit="UpdateBookAsync" ButtonText="Mentés" />
+}
+
+
+<div class="mb-3" style="margin-top: 1em">
+    <a href="/books" class="btn btn-primary">Mégse</a>
+</div>
+
+@code {
+
+    [Parameter]
+    public int inventoryNumber { get; set; }
+
+    private Book _book;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _book = await BookService.GetBookAsync(inventoryNumber);
+    }
+
+    private async Task UpdateBookAsync()
+    {
+        await BookService.UpdateBookAsync(inventoryNumber, _book);
+        NavigationManager.NavigateTo("/books");
+    }
+}
+

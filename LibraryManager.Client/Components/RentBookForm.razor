@@ -1,0 +1,49 @@
+﻿@using LibraryManager.Shared.Models
+
+<EditForm Model="Rental" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Olvasó száma</label>
+        <InputNumber @bind-Value="Rental.ReaderNumber" placeholder="Olvasó száma" />
+        <ValidationMessage For="() => Rental.ReaderNumber" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Könyv leltári száma</label>
+        <InputNumber @bind-Value="Rental.InventoryNumber" placeholder="Könyv leltári száma" />
+        <ValidationMessage For="() => Rental.InventoryNumber" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Kölcsönzés dátuma</label>
+        <InputDate @bind-Value="Rental.RentalDate" />
+        <ValidationMessage For="() => Rental.RentalDate" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Visszahozási határidő</label>
+        <InputDate @bind-Value="Rental.DueDate" />
+        <ValidationMessage For="() => Rental.DueDate" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">@ButtonText</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public Rental Rental { get; set; } = new();
+
+    [Parameter]
+    public Func<Task> OnValidSubmit { get; set; }
+
+    [Parameter]
+    public string ButtonText { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (Rental.RentalDate == default)
+        {
+            Rental.RentalDate = DateOnly.FromDateTime(DateTime.Today);
+            Rental.DueDate = DateOnly.FromDateTime(DateTime.Today.AddDays(14));
+        }
+    }
+}

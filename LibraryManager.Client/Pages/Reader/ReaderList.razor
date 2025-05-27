@@ -1,0 +1,66 @@
+﻿@page "/readers"
+@using LibraryManager.Shared.Models
+@using LibraryManager.Client.Interfaces
+@inject IReaderService ReaderService
+
+<h3>Olvasók</h3>
+
+<div class="mb-3">
+    <a href="/readers/add" class="btn btn-primary">Olvasó hozzáadása</a>
+</div>
+
+@if (_readers is not null)
+{
+    <table class="table table-hover border">
+        <thead>
+            <tr>
+                <th>Olvasó szám</th>
+                <th>Név</th>
+                <th>Lakcím</th>
+                <th>Születési dátum</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reader in _readers)
+            {
+                <tr>
+                    <td>@reader.ReaderNumber</td>
+                    <td>@reader.Name</td>
+                    <td>@reader.Address</td>
+                    <td>@reader.BirthDate</td>
+                    <td>
+                        <a href="/readers/@reader.ReaderNumber">
+                            Kölcsönzések
+                        </a>
+                    </td>
+                    <td>
+                        <a href="/readers/update/@reader.ReaderNumber">
+                            Frissítés
+                        </a>
+                    </td>
+                    <td>
+                        <a href="/readers/remove/@reader.ReaderNumber">
+                            Törlés
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Betöltés...</p>
+}
+
+@code {
+    private List<Reader> _readers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _readers = await ReaderService.GetAllReadersAsync();
+    }
+}

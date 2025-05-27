@@ -1,0 +1,24 @@
+﻿@page "/books/add"
+@using LibraryManager.Shared.Models
+@using LibraryManager.Client.Interfaces
+@inject IBookService BookService
+@inject NavigationManager NavigationManager
+
+<h3>Könyv hozzáadása</h3>
+
+<BookForm Book="_book" OnValidSubmit="AddBookAsync" ButtonText="Hozzáad" />
+
+<div class="mb-3" style="margin-top: 1em">
+    <a href="/books" class="btn btn-primary">Mégse</a>
+</div>
+
+@code {
+    private Book _book = new();
+
+    private async Task AddBookAsync()
+    {
+        await BookService.AddBookAsync(_book);
+        NavigationManager.NavigateTo("/books");
+    }
+}
+
