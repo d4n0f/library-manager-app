@@ -19,10 +19,25 @@ namespace LibraryManager.API.Controllers
         public async Task<IActionResult> Add([FromBody] Rental rental)
         {
             var existingReader = await _rentalsDataContext.Readers.FindAsync(rental.ReaderNumber);
-
-            if (existingReader is not null)
+            if (existingReader is null)
             {
-                return Conflict();
+                return NotFound("Az olvasó nem található.");
+            }
+
+            var existingBook = await _rentalsDataContext.Books
+                .FirstOrDefaultAsync(b => b.InventoryNumber == rental.InventoryNumber);
+
+            if (existingBook is null)
+            {
+                return NotFound("A könyv nem található.");
+            }
+
+            var alreadyRented = await _rentalsDataContext.Rentals
+                .AnyAsync(r => r.InventoryNumber == rental.InventoryNumber);
+
+            if (alreadyRented)
+            {
+                return Conflict("Ez a könyv már ki van kölcsönözve.");
             }
 
             _rentalsDataContext.Rentals.Add(rental);
@@ -31,14 +46,15 @@ namespace LibraryManager.API.Controllers
             return Ok();
         }
 
-        [HttpDelete("{rentalId}")]
-        public async Task<IActionResult> Delete(int rentalId)
+        [HttpDelete("{readerNumber}/{inventoryNumber}")]
+        public async Task<IActionResult> Delete(int readerNumber, int inventoryNumber)
         {
-            var existingRental = await _rentalsDataContext.Rentals.FindAsync(rentalId);
+            var existingRental = await _rentalsDataContext.Rentals
+                .FirstOrDefaultAsync(r => r.ReaderNumber == readerNumber && r.InventoryNumber == inventoryNumber);
 
             if (existingRental is null)
             {
-                return NotFound();
+                return NotFound("A megadott kölcsönzés nem található.");
             }
 
             _rentalsDataContext.Rentals.Remove(existingRental);
@@ -53,16 +69,41 @@ namespace LibraryManager.API.Controllers
             var rentals = await _rentalsDataContext.Rentals.ToListAsync();
             return Ok(rentals);
         }
-            
-        [HttpGet("{rentalId}")]
-        public async Task<ActionResult<Rental>> Get(int rentalId)
-        {
-            var rental = await _rentalsDataContext.Rentals.FindAsync(rentalId);
 
-            if (rental is null)
+        [HttpGet("{readerNumber}")]
+        public async Task<ActionResult<List<Rental>>> Get(int readerNumber)
+        {
+            var rentals = await _rentalsDataContext.Rentals
+                .Where(r => r.ReaderNumber == readerNumber)
+                .ToListAsync();
+
+            if (rentals is null)
             {
                 return NotFound();
             }
+
+            return Ok(rentals);
+        }
+
+        [HttpGet("id/{rentalId}")]
+        public async Task<ActionResult<Rental>> GetRentalById(int rentalId)
+        {
+            var rental = await _rentalsDataContext.Rentals.FindAsync(rentalId);
+
+            if (rental == null)
+                return NotFound();
+
+            return Ok(rental);
+        }
+
+        [HttpGet("{readerNumber}/{inventoryNumber}")]
+        public async Task<ActionResult<Rental>> GetRental(int readerNumber, int inventoryNumber)
+        {
+            var rental = await _rentalsDataContext.Rentals
+                .FirstOrDefaultAsync(r => r.ReaderNumber == readerNumber && r.InventoryNumber == inventoryNumber);
+
+            if (rental == null)
+                return NotFound();
 
             return Ok(rental);
         }

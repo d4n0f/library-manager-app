@@ -1,4 +1,5 @@
-﻿using LibraryManager.Shared.Models;
+﻿using LibraryManager.Shared.DTOs;
+using LibraryManager.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,12 +32,12 @@ namespace LibraryManager.API.Controllers
             return Ok();
         }
 
-        [HttpDelete("{readerNumber}")]
-        public async Task<IActionResult> Delete(int readerNumber)
+        [HttpDelete]
+        public async Task<IActionResult> Delete([FromBody] RemoveReaderDTO dto)
         {
-            var existingReader = await _readersDataContext.Readers.FindAsync(readerNumber);
+            var existingReader = await _readersDataContext.Readers.FindAsync(dto.ReaderNumber);
 
-            if (existingReader is null)
+            if (existingReader == null)
             {
                 return NotFound();
             }

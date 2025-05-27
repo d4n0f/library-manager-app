@@ -1,4 +1,5 @@
-﻿using LibraryManager.Shared.Models;
+﻿using LibraryManager.Shared.DTOs;
+using LibraryManager.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +31,21 @@ namespace LibraryManager.API.Controllers
             var existingBook = await _booksDataContext.Books.FindAsync(inventoryNumber);
 
             if (existingBook is null)
+            {
+                return NotFound();
+            }
+
+            _booksDataContext.Books.Remove(existingBook);
+            await _booksDataContext.SaveChangesAsync();
+
+            return Ok();
+        }
+        [HttpDelete]
+        public async Task<IActionResult> Delete([FromBody] RemoveBookDTO dto)
+        {
+            var existingBook = await _booksDataContext.Books.FindAsync(dto.InventoryNumber);
+
+            if (existingBook == null)
             {
                 return NotFound();
             }
