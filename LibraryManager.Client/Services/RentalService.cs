@@ -14,49 +14,39 @@ namespace LibraryManager.Client.Services
             _httpClient = httpClient;
         }
 
-        public async Task<List<Book>> GetAllBooksAsync()
+        public async Task<List<Rental>> GetAllRentedBooksAsync()
         {
-            throw new NotImplementedException();
+            return await _httpClient.GetFromJsonAsync<List<Rental>>("rentals");
         }
 
-        public async Task<List<Book>> GetRentedBooksAsync()
+        public async Task<List<Rental>> GetRentedBooksByPersonAsync(int readerNumber)
         {
-            try
-            {
-                var books = await _httpClient.GetFromJsonAsync<List<Book>>("books");
-                return books ?? new List<Book>();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error fetching books: {ex.Message}");
-                return new List<Book>();
-            }
+            return await _httpClient.GetFromJsonAsync<List<Rental>>($"rentals/{readerNumber}");
         }
 
-        public async Task<Book> GetRentedBookAsync(int inventoryNumber)
+        public async Task<Rental> GetRentedBookByPersonAsync(int readerNumber, int inventoryNumber)
         {
-            return await _httpClient.GetFromJsonAsync<Book>($"books/{inventoryNumber}");
+            return await _httpClient.GetFromJsonAsync<Rental>($"rentals/{readerNumber}/{inventoryNumber}");
         }
 
-        public async Task<Rental> GetRentedBooksByPersonAsync(int readerNumber, int inventoryNumber)
+        public async Task RentBookAsync(Rental inventoryNumber)
         {
-            //throw new NotImplementedException();
-            return await _httpClient.GetFromJsonAsync<Rental>($"rentals/{readerNumber}");
+            await _httpClient.PostAsJsonAsync("rentals", inventoryNumber);
         }
 
-        public async Task RentBookAsync(Book book)
+        public async Task ReturnBookAsync(int readerNumber, int inventoryNumber)
         {
-            await _httpClient.PostAsJsonAsync("books", book);
+            await _httpClient.DeleteAsync($"rentals/{readerNumber}/{inventoryNumber}");
         }
 
-        public async Task UpdateDueTimeAsync(int inventoryNumber, Book book)
+        public async Task UpdateRentedAsync(int rentalId, Rental rental)
         {
-            await _httpClient.PutAsJsonAsync($"books/{inventoryNumber}", book);
+            await _httpClient.PutAsJsonAsync($"rentals/{rentalId}", rental);
         }
 
-        public async Task ReturnBookAsync(int inventoryNumber)
+        public async Task<Rental> GetRentalByIdAsync(int rentalId)
         {
-            await _httpClient.DeleteAsync($"books/{inventoryNumber}");
+            return await _httpClient.GetFromJsonAsync<Rental>($"rentals/id/{rentalId}");
         }
     }
 }

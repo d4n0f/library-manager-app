@@ -4,18 +4,16 @@ namespace LibraryManager.Client.Interfaces
 {
     public interface IRentalService
     {
-        Task<List<Book>> GetAllBooksAsync();
+        Task<List<Rental>> GetAllRentedBooksAsync();
 
-        Task<List<Book>> GetRentedBooksAsync();
+        Task<List<Rental>> GetRentedBooksByPersonAsync(int readerNumber);
 
-        Task<Book> GetRentedBookAsync(int inventoryNumber);
+        Task<Rental> GetRentedBookByPersonAsync(int readerNumber, int inventoryNumber);
 
-        Task<Rental> GetRentedBooksByPersonAsync(int readerNumber, int inventoryNumber);
+        Task RentBookAsync(Rental inventoryNumber);
 
-        Task RentBookAsync(Book book);
+        Task ReturnBookAsync(int readerNumber, int inventoryNumber);
 
-        Task UpdateDueTimeAsync(int inventoryNumber, Book book);
-
-        Task ReturnBookAsync(int inventoryNumber);
+        Task UpdateRentedAsync(int rentalId, Rental rental);
     }
 }
