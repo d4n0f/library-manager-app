@@ -1,31 +1,122 @@
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    background: #f5f3e7;
+    color: #4e342e;
+    min-height: 100vh;
+}
+
+h3 {
+    color: #4e342e;
 }
 
 h1:focus {
     outline: none;
 }
 
+
+
 a, .btn-link {
-    color: #0071c1;
+    color: #6d4c41;
+    transition: color 0.2s;
 }
+
+
+a:hover, .btn-link:hover {
+    color: #3e2723;
+}
+
+
+
 
 .btn-primary {
     color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+    background-color: #6d4c41;
+    border-color: #4e342e;
+    border-radius: 8px;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(109, 76, 65, 0.10);
+    transition: background 0.2s, border 0.2s;
 }
 
+    
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background-color: #3e2723;
+    border-color: #3e2723;
+}
+
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 0.5rem 1.2rem;
+    font-size: 1rem;
+}
+
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #6d4c41;
+}
+
+button:focus, .btn:focus, .btn-primary:focus, .btn:active:focus {
+    background-color: #9f7f75;
+}
+
+.about-card {
+    background: #6d4c41;
+    border-left: 7px solid #3e2723;
+    box-shadow: 0 2px 16px rgba(109, 76, 65, 0.18);
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+    color: #4e342e;
 }
 
 .content {
     padding-top: 1.1rem;
 }
 
+.card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(60, 40, 20, 0.08);
+    padding: 2rem 1.5rem;
+    margin-bottom: 2rem;
+}
+
+input, select, textarea {
+    border-radius: 7px;
+    border: 1px solid #a1887f;
+    padding: 0.5rem 0.9rem;
+    font-size: 1rem;
+    background: #f8f6f2;
+    color: #4e342e;
+    transition: border 0.2s;
+}
+
+
+input:focus, select:focus, textarea:focus {
+    border: 1.5px solid #6d4c41;
+    outline: none;
+}
+
+
+label {
+    color: #6d4c41;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    background: #e8e5d1;
+}
+::-webkit-scrollbar-thumb {
+    background: #87726a;
+    border-radius: 8px;
+}
+
+
 .valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
+    outline: 1px solid #a1887f;
 }
 
 .invalid {
@@ -84,7 +175,7 @@ a, .btn-link {
     }
 
         .loading-progress circle:last-child {
-            stroke: #1b6ec2;
+            stroke: #6d4c41;
             stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
             transition: stroke-dasharray 0.05s ease-in-out;
         }
