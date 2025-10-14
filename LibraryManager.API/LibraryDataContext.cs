@@ -5,8 +5,8 @@ namespace LibraryManager.API
 {
     public class LibraryDataContext : DbContext
     {
-        public LibraryDataContext(DbContextOptions options)
-        : base(options)
+    public LibraryDataContext(DbContextOptions<LibraryDataContext> options)
+    : base(options)
         {
         }
 

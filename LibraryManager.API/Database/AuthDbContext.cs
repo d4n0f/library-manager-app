@@ -6,7 +6,7 @@ namespace LibraryManager.API.Database
 {
     public class AuthDbContext : IdentityDbContext<IdentityUser>
     {
-        public AuthDbContext(DbContextOptions options) : base(options)
+    public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options)
         {
         }
     }
