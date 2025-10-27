@@ -22,14 +22,16 @@ namespace LibraryManager.Client.Services
         public async Task<string?> Login(LoginRequest request)
         {
             var response = await _http.PostAsJsonAsync("/login", request);
+            var content = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Status: {response.StatusCode}, Content: {content}");
 
-            if(!response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
                 return null;
             }
 
             var json = await response.Content.ReadFromJsonAsync<LoginResponse>();
-            return json?.Token;
+            return json?.AccessToken;
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
-using System.IdentityModel.Tokens.Jwt;
+﻿using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
 namespace LibraryManager.Client.Services
@@ -16,33 +16,35 @@ namespace LibraryManager.Client.Services
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var token = await _tokenProvider.GetTokenAsync();
-            if(string.IsNullOrWhiteSpace(token))
-            {
+
+            if (string.IsNullOrWhiteSpace(token))
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
-            }
 
-            var handler = new JwtSecurityTokenHandler();
-            var jwt = handler.ReadJwtToken(token);
-            var identity = new ClaimsIdentity(jwt.Claims, "jwt");
+            // Ha van token, az alapján hitelesített user-t adunk vissza
+            var identity = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Name, "AuthenticatedUser")
+            }, "Bearer");
+
             var user = new ClaimsPrincipal(identity);
-
             return new AuthenticationState(user);
         }
 
         public void NotifyUserAuthentication(string token)
         {
-            var handler = new JwtSecurityTokenHandler();
-            var jwt = handler.ReadJwtToken(token);
-            var identity = new ClaimsIdentity(jwt.Claims, "jwt");
-            var user = new ClaimsPrincipal(identity);
+            var identity = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Name, "AuthenticatedUser")
+            }, "Bearer");
 
+            var user = new ClaimsPrincipal(identity);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
         }
 
         public void NotifyUserLogout()
         {
-            var anonymus = new ClaimsPrincipal(new ClaimsIdentity());
-            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(anonymus)));
+            var anonymous = new ClaimsPrincipal(new ClaimsIdentity());
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(anonymous)));
         }
     }
 }

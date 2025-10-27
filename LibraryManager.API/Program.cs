@@ -41,7 +41,7 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
     {
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "Kérjük adja meg a tokent.",
+        Description = "KÃ©rjÃ¼k adja meg a tokent.",
         Name = "Authorization",
         Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
         BearerFormat = "JWT",

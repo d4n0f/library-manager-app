@@ -2,6 +2,8 @@
 @using LibraryManager.Shared.Models
 @using LibraryManager.Client.Interfaces
 @inject IReaderService ReaderService
+@using Microsoft.AspNetCore.Authorization;
+@attribute [Authorize]
 
 <h3>Olvasók</h3>
 
