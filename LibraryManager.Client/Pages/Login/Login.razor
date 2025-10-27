@@ -13,6 +13,11 @@
     <a @onclick="HandleLogin" class="btn btn-primary">Belépés</a>
 </div>
 
+<div class="mb-3" style="margin-top: 1.5em">
+    <a @onclick="GoToRegister" class="btn btn-primary">Regisztráció</a>
+</div>
+
+
 @code {
     string Email = "";
     string Password = "";
@@ -26,6 +31,11 @@
             ((ApiAuthenticationStateProvider)AuthStateProvider).NotifyUserAuthentication(token);
             Nav.NavigateTo("/");
         }
+    }
+
+    private void GoToRegister()
+    {
+        Nav.NavigateTo("/register");
     }
 }
 
