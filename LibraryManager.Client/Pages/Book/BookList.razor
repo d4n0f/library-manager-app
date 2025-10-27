@@ -2,6 +2,8 @@
 @using LibraryManager.Shared.Models
 @using LibraryManager.Client.Interfaces
 @inject IBookService BookService
+@using Microsoft.AspNetCore.Authorization;
+@attribute [Authorize]
 
 <h3>Könyvek</h3>
 

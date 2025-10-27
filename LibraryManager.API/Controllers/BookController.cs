@@ -1,5 +1,6 @@
 ﻿using LibraryManager.Shared.DTOs;
 using LibraryManager.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Add([FromBody] Book book)
         {
             _booksDataContext.Books.Add(book);
@@ -26,6 +28,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpDelete("{inventoryNumber}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int inventoryNumber)
         {
             var existingBook = await _booksDataContext.Books.FindAsync(inventoryNumber);
@@ -40,7 +43,9 @@ namespace LibraryManager.API.Controllers
 
             return Ok();
         }
+
         [HttpDelete]
+        [Authorize]
         public async Task<IActionResult> Delete([FromBody] RemoveBookDTO dto)
         {
             var existingBook = await _booksDataContext.Books.FindAsync(dto.InventoryNumber);
@@ -57,6 +62,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<Book>>> GetAll()
         {
             var books = await _booksDataContext.Books.ToListAsync();
@@ -64,6 +70,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet("{inventoryNumber}")]
+        [Authorize]
         public async Task<ActionResult<Book>> Get(int inventoryNumber)
         {
             var book = await _booksDataContext.Books.FindAsync(inventoryNumber);
@@ -77,6 +84,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpPut("{inventoryNumber}")]
+        [Authorize]
         public async Task<IActionResult> Update(int inventoryNumber, [FromBody] Book book)
         {
             if (inventoryNumber != book.InventoryNumber)

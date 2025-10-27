@@ -1,4 +1,5 @@
 ﻿using LibraryManager.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Add([FromBody] Rental rental)
         {
             var existingReader = await _rentalsDataContext.Readers.FindAsync(rental.ReaderNumber);
@@ -47,6 +49,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpDelete("{readerNumber}/{inventoryNumber}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int readerNumber, int inventoryNumber)
         {
             var existingRental = await _rentalsDataContext.Rentals
@@ -64,6 +67,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<Rental>>> GetAll()
         {
             var rentals = await _rentalsDataContext.Rentals.ToListAsync();
@@ -71,6 +75,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet("{readerNumber}")]
+        [Authorize]
         public async Task<ActionResult<List<Rental>>> Get(int readerNumber)
         {
             var rentals = await _rentalsDataContext.Rentals
@@ -86,6 +91,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet("id/{rentalId}")]
+        [Authorize]
         public async Task<ActionResult<Rental>> GetRentalById(int rentalId)
         {
             var rental = await _rentalsDataContext.Rentals.FindAsync(rentalId);
@@ -97,6 +103,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet("{readerNumber}/{inventoryNumber}")]
+        [Authorize]
         public async Task<ActionResult<Rental>> GetRental(int readerNumber, int inventoryNumber)
         {
             var rental = await _rentalsDataContext.Rentals
@@ -109,6 +116,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpPut("{rentalId}")]
+        [Authorize]
         public async Task<IActionResult> Update(int rentalId, [FromBody] Rental rental)
         {
             if (rentalId != rental.RentalID)

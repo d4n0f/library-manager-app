@@ -1,0 +1,84 @@
+﻿@page "/register"
+@using LibraryManager.Shared.DTOs
+@inject AuthService AuthService
+@inject TokenProvider TokenProvider
+@inject NavigationManager Nav
+@inject AuthenticationStateProvider AuthStateProvider
+
+<h3>Regisztráció</h3>
+
+<div class="mb-3">
+    <input @bind="Email" placeholder="Email" class="form-control" />
+</div>
+<div class="mb-3">
+    <input type="password" @bind="Password" placeholder="Jelszó" class="form-control" />
+</div>
+<div class="mb-3">
+    <input type="password" @bind="ConfirmPassword" placeholder="Jelszó újra" class="form-control" />
+</div>
+
+<div class="mb-3" style="margin-top: 1em">
+    <a @onclick="HandleRegister" class="btn btn-primary">Regisztráció</a>
+</div>
+
+<div class="mb-3" style="margin-top: 1.5em">
+    <a @onclick="GoToLogin" class="btn btn-primary">Bejelentkezés</a>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <div class="alert alert-danger">@ErrorMessage</div>
+}
+
+@code {
+    string Email = "";
+    string Password = "";
+    string ConfirmPassword = "";
+    string ErrorMessage = "";
+
+    private async Task HandleRegister()
+    {
+        ErrorMessage = "";
+
+        if (Password != ConfirmPassword)
+        {
+            ErrorMessage = "A jelszavak nem egyeznek!";
+            return;
+        }
+
+        var success = await AuthService.Register(new RegisterRequest
+        {
+            Email = Email,
+            Password = Password
+        });
+
+        if (!success)
+        {
+            ErrorMessage = "Sikertelen regisztráció!";
+            return;
+        }
+
+        // Automatikus login a regisztráció után
+        var token = await AuthService.Login(new LoginRequest
+        {
+            Email = Email,
+            Password = Password
+        });
+
+        if (token is not null)
+        {
+            await TokenProvider.SaveTokenAsync(token);
+            ((ApiAuthenticationStateProvider)AuthStateProvider).NotifyUserAuthentication(token);
+            Nav.NavigateTo("/");
+        }
+        else
+        {
+            ErrorMessage = "Regisztráció sikeres, de a login sikertelen.";
+        }
+    }
+
+    private void GoToLogin()
+    {
+        Nav.NavigateTo("/login");
+    }
+}

@@ -1,5 +1,6 @@
 ﻿using LibraryManager.Shared.DTOs;
 using LibraryManager.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Add([FromBody] Reader reader)
         {
             var existingReader = await _readersDataContext.Readers.FindAsync(reader.ReaderNumber);
@@ -33,6 +35,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         public async Task<IActionResult> Delete([FromBody] RemoveReaderDTO dto)
         {
             var existingReader = await _readersDataContext.Readers.FindAsync(dto.ReaderNumber);
@@ -49,6 +52,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<Reader>>> GetAll()
         {
             var readers = await _readersDataContext.Readers.ToListAsync();
@@ -56,6 +60,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet("{readerNumber}")]
+        [Authorize]
         public async Task<ActionResult<Reader>> Get(int readerNumber)
         {
             var reader = await _readersDataContext.Readers.FindAsync(readerNumber);
@@ -69,6 +74,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpPut("{readerNumber}")]
+        [Authorize]
         public async Task<IActionResult> Update(int readerNumber, [FromBody] Reader reader)
         {
             if (readerNumber != reader.ReaderNumber)

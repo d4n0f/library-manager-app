@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using System.Security.Claims
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
             <a class="navbar-brand" href="">
                 <img src="/img/konyvtar_kezelo_logo_szoveggel.png" alt="Könyvtár logo" />
@@ -31,16 +33,38 @@
                 <span class="" aria-hidden="true"></span> Kölcsönzések
             </NavLink>
         </div>
+        <div class="nav-item px-3 mt-3" style="display: flex; align-items: center; justify-content: center;">
+            @if (authState?.User?.Identity?.IsAuthenticated ?? false)
+            {
+                <button class="btn btn-outline-light btn-sm" @onclick="Logout">Kijelentkezés</button>
+            }
+        </div>
     </nav>
 </div>
 
 @code {
     private bool collapseNavMenu = true;
-
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private void ToggleNavMenu() => collapseNavMenu = !collapseNavMenu;
 
-    private void ToggleNavMenu()
+    [Inject] private TokenProvider TokenProvider { get; set; } = default!;
+    [Inject] private AuthenticationStateProvider AuthStateProvider { get; set; } = default!;
+    [Inject] private NavigationManager Nav { get; set; } = default!;
+
+    [CascadingParameter] private Task<AuthenticationState>? authStateTask { get; set; }
+
+    private AuthenticationState? authState;
+
+    protected override async Task OnParametersSetAsync()
     {
-        collapseNavMenu = !collapseNavMenu;
+        if (authStateTask != null)
+            authState = await authStateTask;
+    }
+
+    private async Task Logout()
+    {
+        await TokenProvider.ClearTokenAsync();
+        ((ApiAuthenticationStateProvider)AuthStateProvider).NotifyUserLogout();
+        Nav.NavigateTo("/login", true);
     }
 }
