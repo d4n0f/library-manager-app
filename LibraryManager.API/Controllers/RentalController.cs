@@ -17,7 +17,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add([FromBody] Rental rental)
         {
             var existingReader = await _rentalsDataContext.Readers.FindAsync(rental.ReaderNumber);
@@ -49,7 +49,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpDelete("{readerNumber}/{inventoryNumber}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int readerNumber, int inventoryNumber)
         {
             var existingRental = await _rentalsDataContext.Rentals
@@ -67,7 +67,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Rental>>> GetAll()
         {
             var rentals = await _rentalsDataContext.Rentals.ToListAsync();
@@ -75,7 +75,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet("{readerNumber}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Rental>>> Get(int readerNumber)
         {
             var rentals = await _rentalsDataContext.Rentals
@@ -91,7 +91,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet("id/{rentalId}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Rental>> GetRentalById(int rentalId)
         {
             var rental = await _rentalsDataContext.Rentals.FindAsync(rentalId);
@@ -103,7 +103,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet("{readerNumber}/{inventoryNumber}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Rental>> GetRental(int readerNumber, int inventoryNumber)
         {
             var rental = await _rentalsDataContext.Rentals
@@ -116,7 +116,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpPut("{rentalId}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int rentalId, [FromBody] Rental rental)
         {
             if (rentalId != rental.RentalID)
