@@ -1,4 +1,5 @@
 ﻿@using System.Security.Claims
+@inject HttpClient Http
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
@@ -23,16 +24,19 @@
                 <span class="" aria-hidden="true"></span> Könyvek
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/readers" Match="NavLinkMatch.All">
-                <span class="" aria-hidden="true"></span> Olvasók
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/rentals" Match="NavLinkMatch.All">
-                <span class="" aria-hidden="true"></span> Kölcsönzések
-            </NavLink>
-        </div>
+        @if (userRole == "Admin")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/readers" Match="NavLinkMatch.All">
+                    <span class="" aria-hidden="true"></span> Olvasók
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/rentals" Match="NavLinkMatch.All">
+                    <span class="" aria-hidden="true"></span> Kölcsönzések
+                </NavLink>
+            </div>
+        }
         <div class="nav-item px-3 mt-3" style="display: flex; align-items: center; justify-content: center;">
             @if (authState?.User?.Identity?.IsAuthenticated ?? false)
             {
@@ -66,5 +70,32 @@
         await TokenProvider.ClearTokenAsync();
         ((ApiAuthenticationStateProvider)AuthStateProvider).NotifyUserLogout();
         Nav.NavigateTo("/login", true);
+    }
+
+    private string? userRole;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await TokenProvider.GetTokenAsync();
+
+        if (!string.IsNullOrEmpty(token))
+        {
+            Http.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            try
+            {
+                userRole = await Http.GetStringAsync("api/auth/role");
+                Console.WriteLine($"Felhasználó szerepe: {userRole}");
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"Hiba a szerepkör lekérésénél: {ex.Message}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Nincs bejelentkezett felhasználó.");
+        }
     }
 }

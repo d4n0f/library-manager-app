@@ -4,12 +4,17 @@
 @inject IBookService BookService
 @using Microsoft.AspNetCore.Authorization;
 @attribute [Authorize]
+@inject HttpClient Http
+@inject TokenProvider TokenProvider
 
 <h3>Könyvek</h3>
 
-<div class="mb-3">
-    <a href="/books/add" class="btn btn-primary">Könyv hozzáadása</a>
-</div>
+@if (userRole == "Admin")
+{
+    <div class="mb-3">
+        <a href="/books/add" class="btn btn-primary">Könyv hozzáadása</a>
+    </div>
+}
 
 @if (_books is not null)
 {
@@ -34,16 +39,19 @@
                     <td>@book.Author</td>
                     <td>@book.Publisher</td>
                     <td>@book.PublicationYear</td>
-                    <td>
-                        <a href="/books/update/@book.InventoryNumber">
-                            Frissítés
-                        </a>
-                    </td>
-                    <td>
-                        <a href="/books/remove/@book.InventoryNumber">
-                            Törlés
-                        </a>
-                    </td>
+                    @if (userRole == "Admin")
+                    {
+                        <td>
+                            <a href="/books/update/@book.InventoryNumber">
+                                Frissítés
+                            </a>
+                        </td>
+                        <td>
+                            <a href="/books/remove/@book.InventoryNumber">
+                                Törlés
+                            </a>
+                        </td>
+                    }
                 </tr>
             }
         </tbody>
@@ -56,9 +64,29 @@ else
 
 @code {
     private List<Book> _books;
+    private string? userRole;
 
     protected override async Task OnInitializedAsync()
     {
         _books = await BookService.GetAllBooksAsync();
+
+        var token = await TokenProvider.GetTokenAsync();
+
+        if (!string.IsNullOrEmpty(token))
+        {
+            Http.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            try
+            {
+                userRole = await Http.GetStringAsync("/api/auth/role");
+                Console.WriteLine($"Felhasználó szerepe: {userRole}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Szerepkör lekérés hiba: " + ex.Message);
+                userRole = null;
+            }
+        }
     }
 }
