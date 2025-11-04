@@ -1,0 +1,41 @@
+﻿@page "/login"
+@inject AuthService AuthService
+@inject TokenProvider TokenProvider
+@inject NavigationManager Nav
+@inject AuthenticationStateProvider AuthStateProvider
+
+<h3>Bejelentkezés</h3>
+
+<input @bind="Email" placeholder="Email" />
+<input type="password" @bind="Password" placeholder="Jelszó" />
+
+<div class="mb-3" style="margin-top: 1em">
+    <a @onclick="HandleLogin" class="btn btn-primary">Belépés</a>
+</div>
+
+<div class="mb-3" style="margin-top: 1.5em">
+    <a @onclick="GoToRegister" class="btn btn-primary">Regisztráció</a>
+</div>
+
+
+@code {
+    string Email = "";
+    string Password = "";
+
+    private async Task HandleLogin()
+    {
+        var token = await AuthService.Login(new() { Email = Email, Password = Password });
+        if (token is not null)
+        {
+            await TokenProvider.SaveTokenAsync(token);
+            ((ApiAuthenticationStateProvider)AuthStateProvider).NotifyUserAuthentication(token);
+            Nav.NavigateTo("/");
+        }
+    }
+
+    private void GoToRegister()
+    {
+        Nav.NavigateTo("/register");
+    }
+}
+

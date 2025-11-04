@@ -1,5 +1,6 @@
 ﻿using LibraryManager.Shared.DTOs;
 using LibraryManager.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add([FromBody] Book book)
         {
             _booksDataContext.Books.Add(book);
@@ -26,37 +28,61 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpDelete("{inventoryNumber}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int inventoryNumber)
         {
-            var existingBook = await _booksDataContext.Books.FindAsync(inventoryNumber);
-
-            if (existingBook is null)
+            try
             {
-                return NotFound();
+                var existingBook = await _booksDataContext.Books.FindAsync(inventoryNumber);
+
+                if (existingBook is null)
+                {
+                    return NotFound("A könyv nem található.");
+                }
+
+                _booksDataContext.Books.Remove(existingBook);
+                await _booksDataContext.SaveChangesAsync();
+
+                return Ok();
             }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("FOREIGN KEY"))
+                    return BadRequest("A könyv nem törölhető, mert van hozzá kölcsönzés.");
 
-            _booksDataContext.Books.Remove(existingBook);
-            await _booksDataContext.SaveChangesAsync();
-
-            return Ok();
+                return BadRequest("Hiba történt a törlés során.");
+            }
         }
+
         [HttpDelete]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromBody] RemoveBookDTO dto)
         {
-            var existingBook = await _booksDataContext.Books.FindAsync(dto.InventoryNumber);
-
-            if (existingBook == null)
+            try 
             {
-                return NotFound();
+                var existingBook = await _booksDataContext.Books.FindAsync(dto.InventoryNumber);
+
+                if (existingBook == null)
+                {
+                    return NotFound();
+                }
+
+                _booksDataContext.Books.Remove(existingBook);
+                await _booksDataContext.SaveChangesAsync();
+
+                return Ok();
             }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("FOREIGN KEY"))
+                    return BadRequest("A könyv nem törölhető, mert van hozzá kölcsönzés.");
 
-            _booksDataContext.Books.Remove(existingBook);
-            await _booksDataContext.SaveChangesAsync();
-
-            return Ok();
+                return BadRequest("Hiba történt a törlés során.");
+            }
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<Book>>> GetAll()
         {
             var books = await _booksDataContext.Books.ToListAsync();
@@ -64,6 +90,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet("{inventoryNumber}")]
+        [Authorize]
         public async Task<ActionResult<Book>> Get(int inventoryNumber)
         {
             var book = await _booksDataContext.Books.FindAsync(inventoryNumber);
@@ -77,6 +104,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpPut("{inventoryNumber}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int inventoryNumber, [FromBody] Book book)
         {
             if (inventoryNumber != book.InventoryNumber)

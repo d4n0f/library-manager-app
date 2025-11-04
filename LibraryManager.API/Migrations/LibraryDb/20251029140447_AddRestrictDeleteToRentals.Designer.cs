@@ -3,6 +3,7 @@ using System;
 using LibraryManager.API;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManager.API.Migrations
 {
     [DbContext(typeof(LibraryDataContext))]
-    partial class LibraryDataContextModelSnapshot : ModelSnapshot
+    [Migration("20251029140447_AddRestrictDeleteToRentals")]
+    partial class AddRestrictDeleteToRentals
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.36");
@@ -85,7 +87,30 @@ namespace LibraryManager.API.Migrations
 
                     b.HasKey("RentalID");
 
+                    b.HasIndex("InventoryNumber");
+
+                    b.HasIndex("ReaderNumber");
+
                     b.ToTable("Rentals");
+                });
+
+            modelBuilder.Entity("LibraryManager.Shared.Models.Rental", b =>
+                {
+                    b.HasOne("LibraryManager.Shared.Models.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("InventoryNumber")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LibraryManager.Shared.Models.Reader", "Reader")
+                        .WithMany()
+                        .HasForeignKey("ReaderNumber")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Reader");
                 });
 #pragma warning restore 612, 618
         }

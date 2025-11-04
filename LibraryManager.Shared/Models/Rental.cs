@@ -13,8 +13,14 @@ namespace LibraryManager.Shared.Models
         [Required(ErrorMessage = "A mező nem lehet üres!")]
         public int ReaderNumber { get; set; }
 
+        [ForeignKey(nameof(ReaderNumber))]
+        public virtual Reader? Reader { get; set; } = default!;
+
         [Required(ErrorMessage = "A mező nem lehet üres!")]
         public int InventoryNumber { get; set; }
+
+        [ForeignKey(nameof(InventoryNumber))]
+        public virtual Book? Book { get; set; } = default!;
 
         [Required(ErrorMessage = "A mező nem lehet üres!")]
         [NotOlderThanTodaysDate]

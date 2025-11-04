@@ -2,6 +2,8 @@
 @using LibraryManager.Shared.Models
 @using LibraryManager.Client.Interfaces
 @inject IRentalService RentalService
+@using Microsoft.AspNetCore.Authorization;
+@attribute [Authorize]
 
 <h3>Kölcsönzések</h3>
 

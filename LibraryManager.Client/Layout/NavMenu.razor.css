@@ -1,3 +1,58 @@
+.nav-menu {
+    width: 240px;
+    background: linear-gradient(135deg, #3e2723 0%, #6d4c41 100%);
+    padding: 2rem 1.5rem 2rem 1.5rem;
+    box-shadow: 0 4px 24px rgba(60, 40, 20, 0.22);
+    border-right: 3px solid #2d1b13;
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    min-height: 100vh;
+    color: #f5f3e7;
+    z-index: 10;
+}
+
+.nav-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-menu li {
+    margin-bottom: 1.2rem;
+}
+
+
+.nav-menu a {
+    display: block;
+    color: #f5f3e7;
+    background: rgba(62, 39, 35, 0.92);
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    box-shadow: 0 1px 8px rgba(60, 40, 20, 0.13);
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    font-size: 1.08rem;
+}
+
+
+.nav-menu a.active,
+.nav-menu a:hover {
+    background: #a1887f;
+    color: #3e2723;
+    box-shadow: 0 2px 16px rgba(78, 52, 46, 0.22);
+}
+
+
+.nav-menu .nav-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #f5f3e7;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.04em;
+    text-align: center;
+    text-shadow: 0 2px 8px #2d1b13;
+}
 .navbar-toggler {
     background-color: rgba(255, 255, 255, 0.1);
 }
@@ -9,6 +64,22 @@
 
 .navbar-brand {
     font-size: 1.1rem;
+}
+
+.container-fluid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar-brand img {
+    height: 2.5rem;
+    max-width: 100%;
+    object-fit: contain;
+    padding: 0;
+    margin: 0;
 }
 
 .bi {
